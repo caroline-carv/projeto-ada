@@ -1,0 +1,82 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v2
+
+      - name: Configurar ambiente Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Se houver um arquivo requirements.txt com as dependências do projeto
+
+  test:
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v2
+
+      - name: Executar testes
+        run: |
+          python -m unittest discover -s tests -p '*_test.py'  # Supondo que os testes estejam no diretório 'tests' e tenham o sufixo '_test.py'
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs: test
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v2
+
+      - name: Deploy da aplicação
+        run: |
+          # Comando para iniciar o servidor Flask ou implantar a aplicação em um servidor de produção
+          python app.py &
+
+  verify:
+    runs-on: ubuntu-latest
+
+    needs: deploy
+
+    steps:
+      - name: Esperar o servidor estar disponível
+        run: |
+          sleep 5  # Espera 5 segundos para garantir que o servidor esteja iniciado
+          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:5000  # Substitua '5000' pela porta em que o servidor está sendo executado
+
+      - name: Testar a aplicação implantada
+        run: |
+          # Comandos para realizar testes automatizados na aplicação implantada
+          # Exemplo: curl http://localhost:5000/ e verificar se a resposta está correta
+
+      - name: Verificar saúde da nova versão
+        run: |
+          # Comandos para verificar a saúde da nova versão da aplicação
+          # Exemplo: Verificar se a aplicação responde corretamente e se não há erros nos logs
+
+      - name: Rollback em caso de falha
+        if: failure()
+        run: |
+          # Comandos para realizar o rollback em caso de falha na verificação da saúde da nova versão
+          # Exemplo: Parar o servidor Flask ou desfazer a implantação da nova versão
+
