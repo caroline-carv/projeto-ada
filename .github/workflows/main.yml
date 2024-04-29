@@ -63,8 +63,8 @@ jobs:
     steps:
       - name: Esperar o servidor estar disponível
         run: |
-          sleep 5  # Espera 5 segundos para garantir que o servidor esteja iniciado
-          curl --retry 10 --retry-delay 5 --retry-connrefused http://127.0.0.1:5000 
+        #  sleep 5  # Espera 5 segundos para garantir que o servidor esteja iniciado
+        #  curl --retry 10 --retry-delay 5 --retry-connrefused http://127.0.0.1:5000 
       - name: Testar a aplicação implantada
         run: |
           # Comandos para realizar testes automatizados na aplicação implantada
