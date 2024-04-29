@@ -37,7 +37,8 @@ jobs:
 
       - name: Executar testes 
         run: |
-          python -m unittest discover -s projeto-ada/tests -p '*_test.py' # Supondo que os testes estejam no diretório 'tests' e tenham o sufixo '_test.py'
+          python -m unittest _test.py
+
             
 
   deploy:
