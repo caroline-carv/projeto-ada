@@ -37,7 +37,7 @@ jobs:
 
       - name: Executar testes 
         run: |
-          python -m unittest _test.py
+          python -m unittest projeto-ada/_test.py
 
             
 
